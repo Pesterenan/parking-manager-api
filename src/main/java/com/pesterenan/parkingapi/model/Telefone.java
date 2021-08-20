@@ -1,5 +1,7 @@
 package com.pesterenan.parkingapi.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -7,28 +9,33 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.pesterenan.parkingapi.enums.PhoneType;
+import com.pesterenan.parkingapi.enums.TipoTelefone;
 
 @Entity
-public class Phone {
+public class Telefone implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
-	private PhoneType type;
+	private TipoTelefone tipo;
 
-	private String number;
+	private String numero;
 
-	public Phone() {
+	public Telefone() {
 
 	}
 
-	public Phone(Long id, PhoneType type, String number) {
+	public Telefone(Long id, TipoTelefone type, String number) {
 		this.id = id;
-		this.type = type;
-		this.number = number;
+		this.tipo = type;
+		this.numero = number;
 	}
 
 	@Override
@@ -36,8 +43,8 @@ public class Phone {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((number == null) ? 0 : number.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
 		return result;
 	}
 
@@ -49,25 +56,25 @@ public class Phone {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Phone other = (Phone) obj;
+		Telefone other = (Telefone) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (number == null) {
-			if (other.number != null)
+		if (numero == null) {
+			if (other.numero != null)
 				return false;
-		} else if (!number.equals(other.number))
+		} else if (!numero.equals(other.numero))
 			return false;
-		if (type != other.type)
+		if (tipo != other.tipo)
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Phone [id=%s, type=%s, number=%s]", id, type, number);
+		return String.format("Telefone [id=%s, tipo=%s, número=%s]", id, tipo, numero);
 	}
 
 }

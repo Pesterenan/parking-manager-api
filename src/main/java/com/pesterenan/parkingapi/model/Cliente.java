@@ -1,6 +1,7 @@
 package com.pesterenan.parkingapi.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,8 +15,10 @@ import javax.persistence.OneToMany;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.pesterenan.parkingapi.enums.TipoTelefone;
+
 @Entity
-public class Client implements Serializable {
+public class Cliente implements Serializable {
 
 	/**
 	 * 
@@ -29,22 +32,25 @@ public class Client implements Serializable {
 
 	@Column(nullable = false)
 	private String nome;
-	@Column(nullable = false)
-	private String sobrenome;
 	@Column(unique = true, nullable = false)
 	private String cpf;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-	private List<Phone> phones;
+	private List<Telefone> telefones = new ArrayList<Telefone>();
 
-	public Client() {
+	public Cliente() {
 	}
 
-	public Client(@RequestBody Long id, String nome, String sobrenome, String cpf) {
+	public Cliente(@RequestBody Long id, String nome, String sobrenome, String cpf) {
 		this.id = id;
 		this.nome = nome;
-		this.sobrenome = sobrenome;
 		this.cpf = cpf;
+	}
+
+	public void addTelefone(TipoTelefone tipo, String numero) {
+		Telefone telefone = new Telefone(this.id, tipo, numero);
+		telefones.add(telefone);
+		System.out.println(telefones);
 	}
 
 	public Long getId() {
@@ -63,14 +69,6 @@ public class Client implements Serializable {
 		this.nome = nome;
 	}
 
-	public String getSobrenome() {
-		return sobrenome;
-	}
-
-	public void setSobrenome(String sobrenome) {
-		this.sobrenome = sobrenome;
-	}
-
 	public String getCpf() {
 		return cpf;
 	}
@@ -86,7 +84,6 @@ public class Client implements Serializable {
 		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((sobrenome == null) ? 0 : sobrenome.hashCode());
 		return result;
 	}
 
@@ -98,7 +95,7 @@ public class Client implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Client other = (Client) obj;
+		Cliente other = (Cliente) obj;
 		if (cpf == null) {
 			if (other.cpf != null)
 				return false;
@@ -114,17 +111,12 @@ public class Client implements Serializable {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
-		if (sobrenome == null) {
-			if (other.sobrenome != null)
-				return false;
-		} else if (!sobrenome.equals(other.sobrenome))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Cliente [id=%s, nome=%s, sobrenome=%s, cpf=%s]", id, nome, sobrenome, cpf);
+		return String.format("Cliente [id=%s, nome=%s, cpf=%s]", id, nome, cpf);
 	}
 
 }
