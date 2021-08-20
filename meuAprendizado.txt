@@ -1,0 +1,20 @@
+Utilizando o http://start.spring.io/ para iniciar o projeto de um aplicativo de gerenciamento de um estacionamento.
+
+Dependências:
+
+
+
+Verbos HTTP
+
+Metódo GET
+Busca informações no sistema.
+Método POST
+Cria novas entidades no sistema.
+Método PUT
+Modifica entidades no sistema.
+Método DELETE
+Apaga entidades do sistema.
+
+Os métodos GET, PUT e DELETE podem receber informações adicionais como uma "id" para encontrar uma entidade específica do sistema, e retornam códigos de sucesso (200) ou falha (404 - não encontrado) de acordo com o resultado.
+
+
