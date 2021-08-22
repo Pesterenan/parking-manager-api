@@ -2,6 +2,7 @@ package com.pesterenan.parkingapi.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
+import com.pesterenan.parkingapi.exceptionqq.ClienteNotFoundException;
 import com.pesterenan.parkingapi.mapper.ClienteMapper;
 import com.pesterenan.parkingapi.repository.ClienteRepository;
 
@@ -17,7 +19,7 @@ import com.pesterenan.parkingapi.repository.ClienteRepository;
 public class ClienteService {
 
 	private ClienteRepository clienteRepository;
-	
+
 	private final ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
 	@Autowired
@@ -31,16 +33,16 @@ public class ClienteService {
 		return MessageResponseDTO.builder().message("Cliente criado com ID: " + savedCliente.getId()).build();
 
 	}
-	public Cliente save(Cliente cliente) {
-		return clienteRepository.save(cliente);
+
+	public List<ClienteDTO> findAll() {
+		List<Cliente> allClientes = clienteRepository.findAll();
+		return allClientes.stream().map(clienteMapper::toDTO).collect(Collectors.toList());
 	}
 
-	public List<Cliente> findAll() {
-		return clienteRepository.findAll();
-	}
-
-	public Optional<Cliente> findById(Long id) {
-		return clienteRepository.findById(id);
+	public ClienteDTO findById(Long id) throws ClienteNotFoundException {
+		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
+		return clienteMapper.toDTO(cliente);
+		
 	}
 
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
+import com.pesterenan.parkingapi.exceptionqq.ClienteNotFoundException;
 import com.pesterenan.parkingapi.service.ClienteService;
 
 @RestController
@@ -38,12 +39,12 @@ public class ClienteController {
 	}
 
 	@GetMapping
-	public List<Cliente> getAllClientes() {
+	public List<ClienteDTO> getAllClientes() {
 		return clienteService.findAll();
 	}
 
 	@GetMapping("/{id}")
-	public Optional<Cliente> getClienteById(@PathVariable Long id) {
+	public ClienteDTO getClienteById(@PathVariable Long id) throws ClienteNotFoundException {
 		return clienteService.findById(id);
 	}
 }
