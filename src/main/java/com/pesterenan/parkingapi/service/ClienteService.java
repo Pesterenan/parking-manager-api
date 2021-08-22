@@ -8,21 +8,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
+import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
+import com.pesterenan.parkingapi.mapper.ClienteMapper;
 import com.pesterenan.parkingapi.repository.ClienteRepository;
 
 @Service
 public class ClienteService {
 
 	private ClienteRepository clienteRepository;
+	
+	private final ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
 	@Autowired
 	public ClienteService(ClienteRepository clienteRepository) {
 		this.clienteRepository = clienteRepository;
 	}
 
-	public MessageResponseDTO createCliente(Cliente client) {
-		Cliente savedCliente = clienteRepository.save(client);
+	public MessageResponseDTO createCliente(ClienteDTO clienteDTO) {
+		Cliente clienteToSave = clienteMapper.toModel(clienteDTO);
+		Cliente savedCliente = clienteRepository.save(clienteToSave);
 		return MessageResponseDTO.builder().message("Cliente criado com ID: " + savedCliente.getId()).build();
 
 	}
