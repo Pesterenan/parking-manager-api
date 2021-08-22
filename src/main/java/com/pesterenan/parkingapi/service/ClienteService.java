@@ -32,7 +32,7 @@ public class ClienteService {
 	public MessageResponseDTO createCliente(ClienteDTO clienteDTO) {
 		Cliente clienteToSave = clienteMapper.toModel(clienteDTO);
 		Cliente savedCliente = clienteRepository.save(clienteToSave);
-		return MessageResponseDTO.builder().message("Cliente criado com ID: " + savedCliente.getId()).build();
+		return createMessageResponse(savedCliente.getId(), "Cliente criado com ID: ");
 	}
 
 	// Listar todos os Clientes
@@ -53,8 +53,21 @@ public class ClienteService {
 		clienteRepository.deleteById(id);
 	}
 
+	public MessageResponseDTO updateById(Long id, ClienteDTO clienteDTO) throws ClienteNotFoundException {
+		verifyIfExists(id);
+		Cliente clienteToUpdate = clienteMapper.toModel(clienteDTO);
+		Cliente updatedCliente = clienteRepository.save(clienteToUpdate);
+		return createMessageResponse(updatedCliente.getId(), "Cliente atualizado com ID: ");
+
+	}
+
 	// Verificar se a ID informada existe
 	private Cliente verifyIfExists(Long id) throws ClienteNotFoundException {
 		return clienteRepository.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
 	}
+
+	private MessageResponseDTO createMessageResponse(Long id, String message) {
+		return MessageResponseDTO.builder().message(message + id).build();
+	}
+
 }
