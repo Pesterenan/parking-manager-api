@@ -1,5 +1,8 @@
 package com.pesterenan.parkingapi.dto;
 
+import lombok.Builder;
+
+@Builder
 public class MessageResponseDTO {
 
 	private String message;

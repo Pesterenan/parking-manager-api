@@ -3,6 +3,7 @@ package com.pesterenan.parkingapi.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,35 +14,24 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
-import com.pesterenan.parkingapi.enums.TipoTelefone;
-import com.pesterenan.parkingapi.model.Cliente;
+import com.pesterenan.parkingapi.entity.Cliente;
 import com.pesterenan.parkingapi.service.ClienteService;
 
 @RestController
-@RequestMapping("/api/v1/clients")
+@RequestMapping("/api/v1/clientes")
 public class ClienteController {
 
-	private final ClienteService clienteService;
+	private ClienteService clienteService;
 
+	@Autowired
 	public ClienteController(ClienteService clienteService) {
 		this.clienteService = clienteService;
 	}
 
-	@RequestMapping("/add")
-	public void adicionarCliente() {
-		Cliente cliente = new Cliente();
-		cliente.setNome("Renan2");
-		cliente.setCpf("123456789-00");
-		cliente.addTelefone(TipoTelefone.CELULAR, "12345678");
-		createClient(cliente);
-	}
-
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponseDTO createClient(@RequestBody Cliente client) {
-		Cliente savedClient = clienteService.save(client);
-		return new MessageResponseDTO("Cliente criado com ID: " + savedClient.getId());
-
+	public MessageResponseDTO createCliente(@RequestBody Cliente cliente) {
+		return clienteService.createCliente(cliente);
 	}
 
 	@GetMapping
