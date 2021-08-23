@@ -1,0 +1,16 @@
+spring:
+ datasource:
+  driver-class-name: org.h2.Driver
+  url: jdbc:h2:mem:clientes
+  username: sa
+  password:
+jpa:
+ hibernate:
+  ddl-auto: update
+h2:
+ console:
+  enabled: true
+  path: /banco
+sql:
+ init:
+  platform: h2

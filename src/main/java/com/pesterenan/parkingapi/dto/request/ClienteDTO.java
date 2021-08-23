@@ -34,4 +34,9 @@ public class ClienteDTO {
 	@NotEmpty
 	private List<TelefoneDTO> telefones;
 	
+	@Valid
+	@NotEmpty
+	private List<VeiculoDTO> veiculos;
+	
+	
 }

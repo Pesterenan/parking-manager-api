@@ -36,4 +36,7 @@ public class Cliente {
 	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private List<Telefone> telefones;
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	private List<Veiculo> veiculos;
+
 }
