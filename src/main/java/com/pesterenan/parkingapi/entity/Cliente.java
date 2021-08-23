@@ -1,6 +1,5 @@
 package com.pesterenan.parkingapi.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,19 +12,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
-@NoArgsConstructor
+@Data
+@Builder
 @AllArgsConstructor
-public class Cliente  {
-
+@NoArgsConstructor
+public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CLIENTE_ID")
 	private Long id;
 
 	@Column(nullable = false)
@@ -35,6 +34,6 @@ public class Cliente  {
 	private String cpf;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-	private List<Telefone> telefones = new ArrayList<Telefone>();
+	private List<Telefone> telefones;
 
 }

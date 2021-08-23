@@ -4,29 +4,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
-import com.pesterenan.parkingapi.exceptionqq.ClienteNotFoundException;
+import com.pesterenan.parkingapi.exception.ClienteNotFoundException;
 import com.pesterenan.parkingapi.mapper.ClienteMapper;
 import com.pesterenan.parkingapi.repository.ClienteRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ClienteService {
 
 	private ClienteRepository clienteRepository;
 
 	private final ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
-	@Autowired
-	public ClienteService(ClienteRepository clienteRepository) {
-		this.clienteRepository = clienteRepository;
-	}
 
 	// Criar Cliente
 	public MessageResponseDTO createCliente(ClienteDTO clienteDTO) {

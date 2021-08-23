@@ -18,19 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
-import com.pesterenan.parkingapi.exceptionqq.ClienteNotFoundException;
+import com.pesterenan.parkingapi.exception.ClienteNotFoundException;
 import com.pesterenan.parkingapi.service.ClienteService;
+
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/clientes")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ClienteController {
 
 	private ClienteService clienteService;
-
-	@Autowired
-	public ClienteController(ClienteService clienteService) {
-		this.clienteService = clienteService;
-	}
 
 	// Mapeamento para criar clientes no banco de dados
 	@PostMapping

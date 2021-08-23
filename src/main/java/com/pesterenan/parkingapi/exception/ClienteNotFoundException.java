@@ -1,4 +1,4 @@
-package com.pesterenan.parkingapi.exceptionqq;
+package com.pesterenan.parkingapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
