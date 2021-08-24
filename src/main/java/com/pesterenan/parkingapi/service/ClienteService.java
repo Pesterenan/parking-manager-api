@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class ClienteService {
+public class ClienteService implements IClienteService{
 
 	private ClienteRepository clienteRepository;
 
