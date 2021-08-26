@@ -3,9 +3,8 @@ package com.pesterenan.parkingapi.service;
 import java.util.List;
 
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
-import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.dto.request.VeiculoDTO;
-import com.pesterenan.parkingapi.exception.ClienteNotFoundException;
+import com.pesterenan.parkingapi.exception.VeiculoNotFoundException;
 
 public interface IVeiculoService {
 	
@@ -16,10 +15,10 @@ public interface IVeiculoService {
 	public List<VeiculoDTO> findAll();
 
 	// Encontrar Veiculo pela placa
-	public VeiculoDTO findByLicensePlate(Long id) throws ClienteNotFoundException;
+	public VeiculoDTO findByPlaca(String placa) throws VeiculoNotFoundException;
 
 	// Apagar veiculo do banco
-	public void delete(Long id) throws ClienteNotFoundException;
+	public void delete(Long id) throws VeiculoNotFoundException;
 
-	public MessageResponseDTO updateById(Long id, VeiculoDTO veiculoDTO) throws ClienteNotFoundException;
+	public MessageResponseDTO updateById(Long id, VeiculoDTO veiculoDTO) throws VeiculoNotFoundException;
 }

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.pesterenan.parkingapi.enums.TipoPlaca;
 import com.pesterenan.parkingapi.enums.TipoVeiculo;
 
 import lombok.Builder;
@@ -26,21 +27,26 @@ public class Veiculo implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private TipoVeiculo tipo;
+	private TipoVeiculo tipoVeiculo;
 
-	@Column(nullable = false)
+	@Column(unique = true,nullable = false)
 	private String placa;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private TipoPlaca tipoPlaca;
 
 	public Veiculo() {
 		
 	}
 	
-	public Veiculo(Long id, TipoVeiculo tipo, String placa) {
+	public Veiculo(Long id, TipoVeiculo tipoVeiculo, String placa, TipoPlaca tipoPlaca) {
 		this.id = id;
-		this.tipo = tipo;
+		this.tipoVeiculo = tipoVeiculo;
 		this.placa = placa;
+		this.tipoPlaca = tipoPlaca;
 	}
-	
+
 	// Getters and Setters
 	
 	public Long getId() {
@@ -50,15 +56,23 @@ public class Veiculo implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public TipoVeiculo getTipo() {
-		return tipo;
+	
+	public TipoVeiculo getTipoVeiculo() {
+		return tipoVeiculo;
 	}
 
-	public void setTipo(TipoVeiculo tipo) {
-		this.tipo = tipo;
+	public void setTipoVeiculo(TipoVeiculo tipoVeiculo) {
+		this.tipoVeiculo = tipoVeiculo;
 	}
 
+	public TipoPlaca getTipoPlaca() {
+		return tipoPlaca;
+	}
+
+	public void setTipoPlaca(TipoPlaca tipoPlaca) {
+		this.tipoPlaca = tipoPlaca;
+	}
+	
 	public String getPlaca() {
 		return placa;
 	}
@@ -75,7 +89,8 @@ public class Veiculo implements Serializable {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((placa == null) ? 0 : placa.hashCode());
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		result = prime * result + ((tipoPlaca == null) ? 0 : tipoPlaca.hashCode());
+		result = prime * result + ((tipoVeiculo == null) ? 0 : tipoVeiculo.hashCode());
 		return result;
 	}
 
@@ -98,7 +113,9 @@ public class Veiculo implements Serializable {
 				return false;
 		} else if (!placa.equals(other.placa))
 			return false;
-		if (tipo != other.tipo)
+		if (tipoPlaca != other.tipoPlaca)
+			return false;
+		if (tipoVeiculo != other.tipoVeiculo)
 			return false;
 		return true;
 	}
