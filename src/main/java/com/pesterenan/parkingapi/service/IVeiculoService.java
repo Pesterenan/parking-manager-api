@@ -17,8 +17,12 @@ public interface IVeiculoService {
 	// Encontrar Veiculo pela placa
 	public VeiculoDTO findByPlaca(String placa) throws VeiculoNotFoundException;
 
+	// Encontrar veiculo pelo ID
+	public VeiculoDTO findById(Long id) throws VeiculoNotFoundException;
+	
 	// Apagar veiculo do banco
 	public void delete(Long id) throws VeiculoNotFoundException;
 
 	public MessageResponseDTO updateById(Long id, VeiculoDTO veiculoDTO) throws VeiculoNotFoundException;
+
 }

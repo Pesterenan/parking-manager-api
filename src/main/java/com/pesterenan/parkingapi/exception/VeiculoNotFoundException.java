@@ -11,6 +11,10 @@ public class VeiculoNotFoundException extends Exception {
 	public VeiculoNotFoundException(String placa) {
 		super("Veiculo não encontrado com a placa "+ placa);
 	}
+
+	public VeiculoNotFoundException(Long id) {
+		super("Veiculo não encontrado com a ID "+ id);
+	}
 	
 	
 }

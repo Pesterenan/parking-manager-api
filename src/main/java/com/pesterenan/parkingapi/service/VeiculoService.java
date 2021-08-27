@@ -30,12 +30,7 @@ public class VeiculoService implements IVeiculoService {
 	@Override
 	public MessageResponseDTO createVeiculo(VeiculoDTO veiculoDTO) {
 		Veiculo veiculoToSave = veiculoMapper.toModel(veiculoDTO);
-		// Escolher Tipo de Placa de acordo com a numeração
-		TipoPlaca tipoPlaca = Pattern.matches(TipoPlaca.NACIONAL.getTipoPlaca(), veiculoToSave.getPlaca())
-				? TipoPlaca.NACIONAL
-				: TipoPlaca.MERCOSUL;
-		veiculoToSave.setTipoPlaca(tipoPlaca);
-		System.out.println(veiculoToSave.getPlaca());
+		validarPlaca(veiculoToSave);
 		Veiculo savedVeiculo = veiculoRepository.save(veiculoToSave);
 		return createMessageResponse(savedVeiculo.getPlaca(), "Veiculo cadastrado com a placa: ");
 	}
@@ -47,6 +42,12 @@ public class VeiculoService implements IVeiculoService {
 	}
 
 	@Override
+	public VeiculoDTO findById(Long id) throws VeiculoNotFoundException {
+		Veiculo veiculo = verifyIfExists(id);
+		return veiculoMapper.toDTO(veiculo);
+	}
+
+	@Override
 	public VeiculoDTO findByPlaca(String placa) throws VeiculoNotFoundException {
 		Veiculo veiculo = verifyIfExists(placa.toUpperCase());
 		return veiculoMapper.toDTO(veiculo);
@@ -54,17 +55,36 @@ public class VeiculoService implements IVeiculoService {
 
 	@Override
 	public void delete(Long id) throws VeiculoNotFoundException {
-		// TODO Auto-generated method stub
-
+		verifyIfExists(id);
+		veiculoRepository.deleteById(id);
 	}
 
 	@Override
 	public MessageResponseDTO updateById(Long id, VeiculoDTO veiculoDTO) throws VeiculoNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		Veiculo veiculoToUpdate = verifyIfExists(id);
+		veiculoToUpdate = veiculoMapper.toModel(veiculoDTO);
+		validarPlaca(veiculoToUpdate);
+		veiculoToUpdate.setId(id);
+		Veiculo updatedVeiculo = veiculoRepository.save(veiculoToUpdate);
+		return createMessageResponse(updatedVeiculo.getPlaca(), "Veiculo atualizado com a placa: ");
+
+	}
+
+	private void validarPlaca(Veiculo veiculoParaValidarPlaca) {
+		veiculoParaValidarPlaca.setPlaca(veiculoParaValidarPlaca.getPlaca().toUpperCase());
+		// Escolher Tipo de Placa de acordo com a numeração
+		TipoPlaca tipoPlaca = Pattern.matches(TipoPlaca.NACIONAL.getTipoPlaca(), veiculoParaValidarPlaca.getPlaca())
+				? TipoPlaca.NACIONAL
+				: TipoPlaca.MERCOSUL;
+		veiculoParaValidarPlaca.setTipoPlaca(tipoPlaca);
 	}
 
 	// Verificar se a ID informada existe
+	private Veiculo verifyIfExists(Long id) throws VeiculoNotFoundException {
+		return veiculoRepository.findById(id).orElseThrow(() -> new VeiculoNotFoundException(id));
+	}
+
+	// Verificar se a placa informada existe
 	private Veiculo verifyIfExists(String procuraPlaca) throws VeiculoNotFoundException {
 		return veiculoRepository.findByPlaca(procuraPlaca)
 				.orElseThrow(() -> new VeiculoNotFoundException(procuraPlaca));
