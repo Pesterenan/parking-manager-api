@@ -1,6 +1,7 @@
 package com.pesterenan.parkingapi.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
+import com.pesterenan.parkingapi.exception.ClienteAlreadyRegisteredException;
 import com.pesterenan.parkingapi.exception.ClienteNotFoundException;
 import com.pesterenan.parkingapi.mapper.ClienteMapper;
 import com.pesterenan.parkingapi.repository.ClienteRepository;
@@ -17,18 +19,27 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class ClienteService implements IClienteService{
+public class ClienteService implements IClienteService {
 
 	private ClienteRepository clienteRepository;
 
 	private final ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
-
 	// Criar Cliente
-	public MessageResponseDTO createCliente(ClienteDTO clienteDTO) {
+	public ClienteDTO createCliente(ClienteDTO clienteDTO) throws ClienteAlreadyRegisteredException {
+		verifyIfIsAlreadyRegistered(clienteDTO.getCpf());
 		Cliente clienteToSave = clienteMapper.toModel(clienteDTO);
 		Cliente savedCliente = clienteRepository.save(clienteToSave);
-		return createMessageResponse(savedCliente.getId(), "Cliente criado com ID: ");
+		createMessageResponse(savedCliente.getId(), "Cliente criado com ID: ");
+		return clienteMapper.toDTO(savedCliente);
+	}
+
+	private void verifyIfIsAlreadyRegistered(String cpf) throws ClienteAlreadyRegisteredException {
+		Optional<Cliente> optSavedCliente = clienteRepository.findByCpf(cpf);
+		if (optSavedCliente.isPresent()) {
+			throw new ClienteAlreadyRegisteredException(cpf);
+		}
+
 	}
 
 	// Listar todos os Clientes
@@ -40,6 +51,11 @@ public class ClienteService implements IClienteService{
 	// Encontrar ID do cliente
 	public ClienteDTO findById(Long id) throws ClienteNotFoundException {
 		Cliente cliente = verifyIfExists(id);
+		return clienteMapper.toDTO(cliente);
+	}
+
+	public ClienteDTO findByCpf(String cpf) throws ClienteAlreadyRegisteredException {
+		Cliente cliente = verifyIfExists(cpf);
 		return clienteMapper.toDTO(cliente);
 	}
 
@@ -60,6 +76,11 @@ public class ClienteService implements IClienteService{
 	// Verificar se a ID informada existe
 	private Cliente verifyIfExists(Long id) throws ClienteNotFoundException {
 		return clienteRepository.findById(id).orElseThrow(() -> new ClienteNotFoundException(id));
+	}
+
+	// Verificar se o CPF informado existe
+	private Cliente verifyIfExists(String cpf) throws ClienteAlreadyRegisteredException {
+		return clienteRepository.findByCpf(cpf).orElseThrow(() -> new ClienteAlreadyRegisteredException(cpf));
 	}
 
 	private MessageResponseDTO createMessageResponse(Long id, String message) {

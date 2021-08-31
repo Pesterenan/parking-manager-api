@@ -1,10 +1,12 @@
 package com.pesterenan.parkingapi.service;
 
-import static com.pesterenan.parkingapi.utils.ClienteUtils.createFakeDTO;
-import static com.pesterenan.parkingapi.utils.ClienteUtils.createFakeEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.pesterenan.parkingapi.dto.MessageResponseDTO;
+import com.pesterenan.parkingapi.builder.ClienteDTOBuilder;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
+import com.pesterenan.parkingapi.exception.ClienteAlreadyRegisteredException;
+import com.pesterenan.parkingapi.mapper.ClienteMapper;
 import com.pesterenan.parkingapi.repository.ClienteRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,20 +30,42 @@ public class ClienteServiceTest {
 	@InjectMocks
 	private ClienteService clienteService;
 
+	private ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
+
 	@Test
-	void testGivenClienteDTOThenReturnSavedMessage() {
-		ClienteDTO clienteDTO = createFakeDTO();
-		Cliente expectedSavedCliente = createFakeEntity();
+	void whenClienteIsInformedthenItShouldBeCreated() throws ClienteAlreadyRegisteredException {
+		// given
+		ClienteDTO expectedClienteDTO = ClienteDTOBuilder.builder().build().toClienteDTO();
+		Cliente expectedSavedCliente = clienteMapper.toModel(expectedClienteDTO);
 
-		when(clienteRepository.save(any(Cliente.class))).thenReturn(expectedSavedCliente);
+		// when
+		when(clienteRepository.save(expectedSavedCliente)).thenReturn(expectedSavedCliente);
 
-		MessageResponseDTO expectedSuccessMessage = createExpectedMessageResponse(expectedSavedCliente.getId(), "Cliente criado com ID: ");
-		MessageResponseDTO successMessage = clienteService.createCliente(clienteDTO);
+		// then
+		ClienteDTO createdClienteDTO = clienteService.createCliente(expectedClienteDTO);
 
-		assertEquals(expectedSuccessMessage, successMessage);
+		assertThat(createdClienteDTO.getId(), is(equalTo(expectedClienteDTO.getId())));
+		assertThat(createdClienteDTO.getNome(), is(equalTo(expectedClienteDTO.getNome())));
+		assertThat(createdClienteDTO.getCpf(), is(equalTo(expectedClienteDTO.getCpf())));
+
 	}
 
-	private MessageResponseDTO createExpectedMessageResponse(Long id, String message) {
-		return MessageResponseDTO.builder().message(message + id).build();
+	@Test
+	void whenAlreadyRegisteredClienteInformedThenAnExceptionShouldBeThrown() {
+		// given
+		ClienteDTO expectedClienteDTO = ClienteDTOBuilder.builder().build().toClienteDTO();
+		Cliente duplicatedCliente = clienteMapper.toModel(expectedClienteDTO);
+
+		// when
+		when(clienteRepository.findByCpf(expectedClienteDTO.getCpf())).thenReturn(Optional.of(duplicatedCliente));
+		
+		// then
+		assertThrows(ClienteAlreadyRegisteredException.class,() -> clienteService.createCliente(expectedClienteDTO));
+		
 	}
+
+
+
+
+
 }
