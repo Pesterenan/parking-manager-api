@@ -46,6 +46,7 @@ public class VeiculoController {
 
 	// Mapeamento para atualizar veiculo
 	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody @Valid VeiculoDTO veiculoDTO) throws VeiculoNotFoundException {
 		return veiculoService.updateById(id, veiculoDTO);
 		
