@@ -16,4 +16,5 @@ public class MessageResponseDTO {
 	public MessageResponseDTO(String message) {
 		this.message = message;
 	}
+
 }

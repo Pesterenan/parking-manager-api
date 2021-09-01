@@ -5,6 +5,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.pesterenan.parkingapi.enums.TipoPlaca;
 import com.pesterenan.parkingapi.enums.TipoVeiculo;
 
 import lombok.Builder;
@@ -13,18 +14,19 @@ import lombok.Builder;
 public class VeiculoDTO {
 
 	private Long id;
-	
+
 	@Enumerated(EnumType.STRING)
-	private TipoVeiculo tipo;
-	
+	private TipoVeiculo tipoVeiculo;
+
 	@NotEmpty
-	@Size(min =7, max=7)
+	@Size(min = 7, max = 7)
 	private String placa;
 
-	
-	
+	@Enumerated(EnumType.STRING)
+	private TipoPlaca tipoPlaca;
+
 	// Getters and Setters
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -33,12 +35,20 @@ public class VeiculoDTO {
 		this.id = id;
 	}
 
-	public TipoVeiculo getTipo() {
-		return tipo;
+	public TipoVeiculo getTipoVeiculo() {
+		return tipoVeiculo;
 	}
 
-	public void setTipo(TipoVeiculo tipo) {
-		this.tipo = tipo;
+	public void setTipoVeiculo(TipoVeiculo tipoVeiculo) {
+		this.tipoVeiculo = tipoVeiculo;
+	}
+
+	public TipoPlaca getTipoPlaca() {
+		return tipoPlaca;
+	}
+
+	public void setTipoPlaca(TipoPlaca tipoPlaca) {
+		this.tipoPlaca = tipoPlaca;
 	}
 
 	public String getPlaca() {
@@ -50,24 +60,27 @@ public class VeiculoDTO {
 	}
 
 	public VeiculoDTO() {
-		
+
 	}
-	
-	public VeiculoDTO(Long id, TipoVeiculo tipo, @NotEmpty @Size(min = 7, max = 7) String placa) {
+
+	public VeiculoDTO(Long id, TipoVeiculo tipoVeiculo, @NotEmpty @Size(min = 7, max = 7) String placa,
+			TipoPlaca tipoPlaca) {
 		this.id = id;
-		this.tipo = tipo;
+		this.tipoVeiculo = tipoVeiculo;
 		this.placa = placa;
+		this.tipoPlaca = tipoPlaca;
 	}
-	
+
 	// HashCode and Equals
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((placa == null) ? 0 : placa.hashCode());
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		result = prime * result + ((tipoPlaca == null) ? 0 : tipoPlaca.hashCode());
+		result = prime * result + ((tipoVeiculo == null) ? 0 : tipoVeiculo.hashCode());
 		return result;
 	}
 
@@ -90,10 +103,11 @@ public class VeiculoDTO {
 				return false;
 		} else if (!placa.equals(other.placa))
 			return false;
-		if (tipo != other.tipo)
+		if (tipoPlaca != other.tipoPlaca)
+			return false;
+		if (tipoVeiculo != other.tipoVeiculo)
 			return false;
 		return true;
 	}
 
-	
 }

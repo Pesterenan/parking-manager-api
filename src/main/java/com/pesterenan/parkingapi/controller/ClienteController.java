@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pesterenan.parkingapi.dto.MessageResponseDTO;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
+import com.pesterenan.parkingapi.exception.ClienteAlreadyRegisteredException;
 import com.pesterenan.parkingapi.exception.ClienteNotFoundException;
 import com.pesterenan.parkingapi.service.ClienteService;
 
@@ -33,7 +34,8 @@ public class ClienteController {
 	// Mapeamento para criar clientes no banco de dados
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponseDTO createCliente(@RequestBody @Valid ClienteDTO clienteDTO) {
+	public ClienteDTO createCliente(@RequestBody @Valid ClienteDTO clienteDTO)
+			throws ClienteAlreadyRegisteredException {
 		return clienteService.createCliente(clienteDTO);
 	}
 
@@ -48,13 +50,20 @@ public class ClienteController {
 	public ClienteDTO getClienteById(@PathVariable Long id) throws ClienteNotFoundException {
 		return clienteService.findById(id);
 	}
-	
-	@PutMapping("/{id}")
-	public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody @Valid ClienteDTO clienteDTO) throws ClienteNotFoundException {
-		return clienteService.updateById(id, clienteDTO);
-		
+
+	// Buscar Cliente por CPF, retorna "Cliente não encontrado" caso não exista.
+	@GetMapping("/buscaCpf/{cpf}")
+	public ClienteDTO getClienteByCpf(@PathVariable String cpf) throws ClienteNotFoundException {
+		return clienteService.findByCpf(cpf);
 	}
-	
+
+	@PutMapping("/{id}")
+	public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody @Valid ClienteDTO clienteDTO)
+			throws ClienteNotFoundException {
+		return clienteService.updateById(id, clienteDTO);
+
+	}
+
 	// Mapeamento para apagar Clientes do banco.
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
