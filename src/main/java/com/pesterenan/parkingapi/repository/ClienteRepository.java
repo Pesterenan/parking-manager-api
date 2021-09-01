@@ -10,6 +10,6 @@ import com.pesterenan.parkingapi.entity.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-	public Optional<Cliente> findByCpf(String cpf);
+	Optional<Cliente> findByCpf(String cpf);
 
 }

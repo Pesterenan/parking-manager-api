@@ -54,7 +54,7 @@ public class ClienteService implements IClienteService {
 		return clienteMapper.toDTO(cliente);
 	}
 
-	public ClienteDTO findByCpf(String cpf) throws ClienteAlreadyRegisteredException {
+	public ClienteDTO findByCpf(String cpf) throws ClienteNotFoundException {
 		Cliente cliente = verifyIfExists(cpf);
 		return clienteMapper.toDTO(cliente);
 	}
@@ -79,8 +79,8 @@ public class ClienteService implements IClienteService {
 	}
 
 	// Verificar se o CPF informado existe
-	private Cliente verifyIfExists(String cpf) throws ClienteAlreadyRegisteredException {
-		return clienteRepository.findByCpf(cpf).orElseThrow(() -> new ClienteAlreadyRegisteredException(cpf));
+	private Cliente verifyIfExists(String cpf) throws ClienteNotFoundException {
+		return clienteRepository.findByCpf(cpf).orElseThrow(() -> new ClienteNotFoundException(cpf));
 	}
 
 	private MessageResponseDTO createMessageResponse(Long id, String message) {

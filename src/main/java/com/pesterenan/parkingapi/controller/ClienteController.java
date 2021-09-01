@@ -53,7 +53,7 @@ public class ClienteController {
 
 	// Buscar Cliente por CPF, retorna "Cliente não encontrado" caso não exista.
 	@GetMapping("/buscaCpf/{cpf}")
-	public ClienteDTO getClienteByCpf(@PathVariable String cpf) throws ClienteAlreadyRegisteredException {
+	public ClienteDTO getClienteByCpf(@PathVariable String cpf) throws ClienteNotFoundException {
 		return clienteService.findByCpf(cpf);
 	}
 

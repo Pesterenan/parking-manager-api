@@ -12,5 +12,8 @@ public class ClienteNotFoundException extends Exception {
 		super("Cliente não encontrado com ID "+ id);
 	}
 	
+	public ClienteNotFoundException(String cpf) {
+		super("Cliente não encontrado com o CPF: " + cpf);
+	}
 	
 }

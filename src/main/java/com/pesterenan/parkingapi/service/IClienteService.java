@@ -19,7 +19,7 @@ public interface IClienteService {
 	public ClienteDTO findById(Long id) throws ClienteNotFoundException;
 	
 	// Encontrar cliente por CPF
-	public ClienteDTO findByCpf(String cpf) throws ClienteAlreadyRegisteredException;
+	public ClienteDTO findByCpf(String cpf) throws ClienteNotFoundException;
 
 	// Apagar cliente do banco
 	public void delete(Long id) throws ClienteNotFoundException;

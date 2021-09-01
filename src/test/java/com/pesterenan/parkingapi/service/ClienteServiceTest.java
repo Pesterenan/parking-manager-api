@@ -18,6 +18,7 @@ import com.pesterenan.parkingapi.builder.ClienteDTOBuilder;
 import com.pesterenan.parkingapi.dto.request.ClienteDTO;
 import com.pesterenan.parkingapi.entity.Cliente;
 import com.pesterenan.parkingapi.exception.ClienteAlreadyRegisteredException;
+import com.pesterenan.parkingapi.exception.ClienteNotFoundException;
 import com.pesterenan.parkingapi.mapper.ClienteMapper;
 import com.pesterenan.parkingapi.repository.ClienteRepository;
 
@@ -64,7 +65,32 @@ public class ClienteServiceTest {
 		
 	}
 
-
+	@Test
+	void whenValidClienteCPFIsGivenThenReturnACliente() throws ClienteNotFoundException {
+		// given
+		ClienteDTO expectedFoundClienteDTO = ClienteDTOBuilder.builder().build().toClienteDTO();
+		Cliente expectedFoundCliente = clienteMapper.toModel(expectedFoundClienteDTO);
+		
+		// when
+		when(clienteRepository.findByCpf(expectedFoundCliente.getCpf())).thenReturn(Optional.of(expectedFoundCliente));
+		
+		// then
+		ClienteDTO foundClienteDTO = clienteService.findByCpf(expectedFoundCliente.getCpf());
+		
+		assertThat(foundClienteDTO, is(equalTo(expectedFoundClienteDTO)));
+	}
+	
+	@Test
+	void whenNotValidClienteCPFIsGivenThenThrowAnException() {
+		// given
+		ClienteDTO expectedFoundClienteDTO = ClienteDTOBuilder.builder().build().toClienteDTO();
+		
+		// when
+		when(clienteRepository.findByCpf(expectedFoundClienteDTO.getCpf())).thenReturn(Optional.empty());
+		
+		// then
+		assertThrows(ClienteNotFoundException.class, () -> clienteService.findByCpf(expectedFoundClienteDTO.getCpf()));
+	}
 
 
 
